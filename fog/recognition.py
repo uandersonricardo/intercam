@@ -3,6 +3,7 @@ import os, sys
 import cv2
 import numpy as np
 import math
+import base64
 
 # Helper
 def face_confidence(face_distance, face_match_threshold=0.6):
@@ -63,8 +64,8 @@ class FaceRecognition:
             for face_encoding in self.face_encodings:
                 # See if the face is a match for the known face(s)
                 matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
-                name = "Unknown"
-                confidence = '???'
+                name = "unknown"
+                confidence = "0"
 
                 # Calculate the shortest distance to face
                 face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
@@ -74,9 +75,18 @@ class FaceRecognition:
                     name = self.known_face_names[best_match_index]
                     confidence = face_confidence(face_distances[best_match_index])
 
-                self.face_names.append(f'{name} ({confidence})')
+                # cv2.imwrite(f"images/{name.split('.')[0]}-{confidence}.jpg", frame)
+
+                _, buffer = cv2.imencode('.jpg', frame)
+
+                jpg_base64 = base64.b64encode(buffer)
+
+                self.stop_recognition()
+
+                return (jpg_base64, name.split(".")[0], confidence)
 
         self.process_current_frame = not self.process_current_frame
+        return None
 
     def stop_recognition(self):
         self.video_capture.release()
