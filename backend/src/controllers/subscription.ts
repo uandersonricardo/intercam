@@ -11,8 +11,20 @@ export type CreateSubscriptionParams = {
 }
 
 export const createSubscription = async (params: CreateSubscriptionParams) => {
-  const subscription = await db.subscription.create({
-    data: {
+  const subscription = await db.subscription.upsert({
+    where: {
+      endpoint: params.endpoint
+    },
+    update: {
+      auth: params.keys.auth,
+      p256dh: params.keys.p256dh,
+      user: {
+        connect: {
+          id: params.userId
+        }
+      }
+    },
+    create: {
       auth: params.keys.auth,
       endpoint: params.endpoint,
       p256dh: params.keys.p256dh,

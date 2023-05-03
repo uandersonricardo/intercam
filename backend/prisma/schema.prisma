@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["orderByNulls"]
 }
 
 datasource db {
@@ -27,6 +28,7 @@ model User {
 model Person {
   id            String   @id @default(uuid())
   name          String
+  image         String?
   defaultAnswer Boolean?
   userId        String
   createdAt     DateTime @default(now())
@@ -39,18 +41,19 @@ model Person {
 }
 
 model Call {
-  id          String   @id @default(uuid())
-  image       String?
-  confidence  Float?
-  personId    String?
-  userId      String
-  answer      Boolean?
-  answeredAt  DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  image         String?
+  croppedImage  String?
+  confidence    Float?
+  personId      String?
+  userId        String
+  answer        Boolean?
+  answeredAt    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  person      Person?  @relation(fields: [personId], references: [id])
-  user        User     @relation(fields: [userId], references: [id])
+  person        Person?  @relation(fields: [personId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 
   @@index([personId], name: "personId")
   @@index([userId], name: "userId")

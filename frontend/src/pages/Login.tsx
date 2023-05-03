@@ -13,12 +13,14 @@ import {
   InputRightElement,
   IconButton,
   useDisclosure,
-  useToast
+  useToast,
+  Image
 } from "@chakra-ui/react";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { Navigate } from "react-router-dom";
 
 import { AuthContext } from "../contexts/Auth";
+import logo from "../assets/logo.png";
  
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -60,10 +62,10 @@ const Login: React.FC = () => {
   }
 
   return (
-    <Flex h="100vh" bg="gray.100" align="center">
-      <Container maxW="lg" py={{ base: "12", md: "24" }} px={{ base: "0", sm: "8" }}>
+    <Flex h="full" bg="gray.100" align="center">
+      <Container maxW="lg" py={{ base: "12", md: "24" }} px={{ base: "4", sm: "8" }}>
         <Stack spacing="8" alignItems="center">
-          <Heading size={{ base: "sm", md: "md" }}>Entrar no InterCam</Heading>
+          <Image src={logo} h="10" />
           <Box
             p="8"
             bg="white"
@@ -85,6 +87,7 @@ const Login: React.FC = () => {
                         aria-label={isOpen ? "Mask password" : "Reveal password"}
                         icon={isOpen ? <HiEyeOff /> : <HiEye />}
                         onClick={onClickReveal}
+                        colorScheme="gray"
                       />
                     </InputRightElement>
                     <Input
@@ -100,7 +103,7 @@ const Login: React.FC = () => {
                   </InputGroup>
                 </FormControl>
               </Stack>
-              <Button colorScheme="blue" onClick={handleLogin} isLoading={loading}>Entrar</Button>
+              <Button onClick={handleLogin} isLoading={loading}>Entrar</Button>
             </Stack>
           </Box>
         </Stack>
