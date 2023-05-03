@@ -4,6 +4,11 @@ import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import { AuthContext } from "./contexts/Auth";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Layout from "./components/Layout";
+import Calls from "./pages/Calls";
+import People from "./pages/People";
+import Stats from "./pages/Stats";
+import Call from "./pages/Call";
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -22,9 +27,15 @@ const Router: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={
           <RequireAuth>
-            <Dashboard />
+            <Layout />
           </RequireAuth>
-        } />
+        }>
+          <Route index element={<Dashboard />} />
+          <Route path="/calls" element={<Calls />} />
+          <Route path="/calls/:id" element={<Call />} />
+          <Route path="/people" element={<People />} />
+          <Route path="/stats" element={<Stats />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

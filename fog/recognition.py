@@ -33,7 +33,13 @@ class FaceRecognition:
     def encode_faces(self):
         for image in os.listdir('faces'):
             face_image = face_recognition.load_image_file(f"faces/{image}")
-            face_encoding = face_recognition.face_encodings(face_image)[0]
+            face_encodings = face_recognition.face_encodings(face_image)
+
+            if len(face_encodings) == 0:
+                print(f"Could not find face in {image}")
+                continue
+
+            face_encoding = face_encodings[0]
 
             self.known_face_encodings.append(face_encoding)
             self.known_face_names.append(image)
@@ -61,11 +67,11 @@ class FaceRecognition:
             self.face_encodings = face_recognition.face_encodings(rgb_small_frame, self.face_locations)
 
             self.face_names = []
-            for face_encoding in self.face_encodings:
+            for (top, right, bottom, left), face_encoding in zip(self.face_locations, self.face_encodings):
                 # See if the face is a match for the known face(s)
                 matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
-                name = "unknown"
-                confidence = "0"
+                name = "-"
+                confidence = "-"
 
                 # Calculate the shortest distance to face
                 face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
@@ -79,11 +85,13 @@ class FaceRecognition:
 
                 _, buffer = cv2.imencode('.jpg', frame)
 
-                jpg_base64 = base64.b64encode(buffer)
+                jpg_base64 = base64.b64encode(buffer).decode('utf-8')
 
                 self.stop_recognition()
 
-                return (jpg_base64, name.split(".")[0], confidence)
+                location = [top * 4, right * 4, bottom * 4, left * 4]
+
+                return (jpg_base64, location, name.split(".")[0], confidence)
 
         self.process_current_frame = not self.process_current_frame
         return None

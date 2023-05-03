@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CreateUserParams, FindUserParams, LoginUserParams, createUser, findUser, loginUser } from "../controllers/user";
+import { CreateUserParams, FindUserParams, HomeUserParams, LoginUserParams, createUser, findUser, homeUser, loginUser } from "../controllers/user";
 import db from "../config/db";
 import webpush from "../config/notification";
 
@@ -26,6 +26,16 @@ userRouter.post('/login', async (req, res) => {
   const user = await loginUser(params);
 
   res.json({ user });
+});
+
+userRouter.get('/home', async (req, res) => {
+  const params: HomeUserParams = {
+    userId: req.query['user']?.toString() || ""
+  };
+
+  const home = await homeUser(params);
+
+  res.json({ ...home });
 });
 
 userRouter.get('/:id', async (req, res) => {

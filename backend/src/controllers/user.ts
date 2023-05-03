@@ -47,6 +47,45 @@ export const loginUser = async (params: LoginUserParams) => {
   return user;
 }
 
+export type HomeUserParams = {
+  userId: string;
+}
+
+export const homeUser = async (params: HomeUserParams) => {
+  const calls = await db.call.findMany({
+    where: {
+      userId: params.userId
+    },
+    include: {
+      person: true
+    },
+    orderBy: [
+      {
+        answeredAt: { sort: "desc", nulls: "first" },
+      },
+      {
+        createdAt: "desc"
+      }
+    ],
+    take: 3,
+  });
+
+  const people = await db.person.findMany({
+    where: {
+      userId: params.userId
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+    take: 3,
+  });
+
+  return {
+    calls,
+    people
+  };
+}
+
 export type FindUserParams = {
   id: string;
 }
