@@ -7,6 +7,7 @@ import callRouter from "./routes/call";
 import userRouter from "./routes/user";
 import subscriptionRouter from "./routes/subscription";
 import personRouter from "./routes/person";
+import statsRouter from "./routes/stats";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(urlencoded({ extended: false }));
 app.use("/calls", callRouter);
 app.use("/users", userRouter);
 app.use("/people", personRouter);
+app.use("/stats", statsRouter);
 app.use("/subscriptions", subscriptionRouter);
 app.use("/public", express.static("public"));
 
