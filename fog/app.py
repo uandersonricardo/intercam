@@ -131,11 +131,15 @@ def face_recognition():
 @app.route('/answer', methods=['POST'])
 def send():
     if request.json['image'] != None:
-        file_name = request.json['image'].split('/')[-1]
-        f = open('faces/' + file_name,'wb')
-        url = environ.get('API_URL') + '/' + request.json['image']
-        f.write(urllib.request.urlopen(url).read())
-        f.close()
+        try:
+            file_name = request.json['image'].split('/')[-1]
+            f = open('faces/' + file_name,'wb')
+            url = environ.get('API_URL') + '/' + request.json['image']
+            print(url)
+            f.write(urllib.request.urlopen(url).read())
+            f.close()
+        except:
+            print('Error downloading image')
 
     send_answer(request.json['answer'])
 
