@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const fog = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: process.env.FOG_URL?.toString() ?? "",
 });
 
 export default fog;
