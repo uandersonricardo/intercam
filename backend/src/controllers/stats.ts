@@ -39,7 +39,7 @@ export const stats = async (params: StatsParams) => {
         DATE_FORMAT(createdAt, '%d/%m/%Y') AS createdAt,
         COUNT(id) AS count
       FROM
-        intercam.call
+        intercam.Call
       WHERE
         userId = ${params.userId} AND
         createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY)
