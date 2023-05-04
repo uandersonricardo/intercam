@@ -32,17 +32,21 @@ class FaceRecognition:
 
     def encode_faces(self):
         for image in os.listdir('faces'):
-            face_image = face_recognition.load_image_file(f"faces/{image}")
-            face_encodings = face_recognition.face_encodings(face_image)
+            try:
+                face_image = face_recognition.load_image_file(f"faces/{image}")
+                face_encodings = face_recognition.face_encodings(face_image)
 
-            if len(face_encodings) == 0:
-                print(f"Could not find face in {image}")
+                if len(face_encodings) == 0:
+                    print(f"Could not find face in {image}")
+                    continue
+
+                face_encoding = face_encodings[0]
+
+                self.known_face_encodings.append(face_encoding)
+                self.known_face_names.append(image)
+            except Exception as e:
+                print(f"Could not find face in {image} - Exception")
                 continue
-
-            face_encoding = face_encodings[0]
-
-            self.known_face_encodings.append(face_encoding)
-            self.known_face_names.append(image)
         print(self.known_face_names)
 
     def setup_recognition(self):

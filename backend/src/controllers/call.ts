@@ -195,7 +195,8 @@ export const updateCall = async (params: UpdateCallParams) => {
   if (params.person && !params.person.id) {
     const newRelativePath = `public/people/${personId}.jpg`;
     const newPath = path.join(__dirname, '..', newRelativePath);
-    fs.copyFile(params.person.image, newPath, (err) => { console.log(err); });
+    const oldPath = path.join(__dirname, '..', params.person.image);
+    fs.copyFile(oldPath, newPath, (err) => { console.log(err); });
 
     body.image = newRelativePath;
   }
