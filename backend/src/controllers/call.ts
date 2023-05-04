@@ -44,7 +44,7 @@ export const createCall = async (params: CreateCallParams) => {
   });
 
   const relativePath = `public/images/${call.id}.jpg`;
-  const fixedPath = path.join(__dirname, relativePath);
+  const fixedPath = path.join(__dirname, '..', relativePath);
   fs.writeFile(fixedPath, params.imageBase64, "base64", (err) => { console.log(err); });
 
   const top = params.location[0];
@@ -55,7 +55,7 @@ export const createCall = async (params: CreateCallParams) => {
   const marginY = Math.ceil(height * 0.3);
 
   const croppedRelativePath = `public/cropped/${call.id}.jpg`;
-  const croppedPath = path.join(__dirname, croppedRelativePath);
+  const croppedPath = path.join(__dirname, '..', croppedRelativePath);
 
   await sharp(fixedPath).extract({ left: left - marginX, top: top - marginY, width: width + 2 * marginX, height: height + 2 * marginY })
     .toFile(croppedPath).catch((err) => { console.log(err); });
@@ -194,7 +194,7 @@ export const updateCall = async (params: UpdateCallParams) => {
 
   if (params.person && !params.person.id) {
     const newRelativePath = `public/people/${personId}.jpg`;
-    const newPath = path.join(__dirname, newRelativePath);
+    const newPath = path.join(__dirname, '..', newRelativePath);
     fs.copyFile(params.person.image, newPath, (err) => { console.log(err); });
 
     body.image = newRelativePath;
