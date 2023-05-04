@@ -1,5 +1,6 @@
 import fs from "fs";
 import sharp from "sharp";
+import path from "path";
 
 import db from "../config/db";
 import webpush from "../config/notification";
@@ -42,8 +43,9 @@ export const createCall = async (params: CreateCallParams) => {
     }
   });
 
-  const path = `public/images/${call.id}.jpg`;
-  fs.writeFile(path, params.imageBase64, "base64", (err) => { console.log(err); });
+  const relativePath = `public/images/${call.id}.jpg`;
+  const fixedPath = path.join(__dirname, relativePath);
+  fs.writeFile(fixedPath, params.imageBase64, "base64", (err) => { console.log(err); });
 
   const top = params.location[0];
   const left = params.location[3];
@@ -52,9 +54,10 @@ export const createCall = async (params: CreateCallParams) => {
   const marginX = Math.ceil(width * 0.2);
   const marginY = Math.ceil(height * 0.3);
 
-  const croppedPath = `public/cropped/${call.id}.jpg`;
+  const croppedRelativePath = `public/cropped/${call.id}.jpg`;
+  const croppedPath = path.join(__dirname, croppedRelativePath);
 
-  await sharp(path).extract({ left: left - marginX, top: top - marginY, width: width + 2 * marginX, height: height + 2 * marginY })
+  await sharp(fixedPath).extract({ left: left - marginX, top: top - marginY, width: width + 2 * marginX, height: height + 2 * marginY })
     .toFile(croppedPath).catch((err) => { console.log(err); });
 
   await db.call.update({
@@ -62,8 +65,8 @@ export const createCall = async (params: CreateCallParams) => {
       id: call.id
     },
     data: {
-      image: path,
-      croppedImage: croppedPath
+      image: relativePath,
+      croppedImage: croppedRelativePath
     }
   });
 
@@ -190,10 +193,11 @@ export const updateCall = async (params: UpdateCallParams) => {
   };
 
   if (params.person && !params.person.id) {
-    const newPath = `public/people/${personId}.jpg`;
+    const newRelativePath = `public/people/${personId}.jpg`;
+    const newPath = path.join(__dirname, newRelativePath);
     fs.copyFile(params.person.image, newPath, (err) => { console.log(err); });
 
-    body.image = newPath;
+    body.image = newRelativePath;
   }
 
   await fog.post("/answer", body).catch((err) => { console.log(err); });
