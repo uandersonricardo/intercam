@@ -61,7 +61,7 @@ export const homeUser = async (params: HomeUserParams) => {
     },
     orderBy: [
       {
-        answeredAt: { sort: "desc", nulls: "first" },
+        answer: { sort: "desc", nulls: "first" },
       },
       {
         createdAt: "desc"

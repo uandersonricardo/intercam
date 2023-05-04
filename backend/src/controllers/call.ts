@@ -116,7 +116,7 @@ export const findCalls = async (params: FindCallsParams) => {
     },
     orderBy: [
       {
-        answeredAt: { sort: "desc", nulls: "first" },
+        answer: { sort: "desc", nulls: "first" },
       },
       {
         createdAt: "desc"
