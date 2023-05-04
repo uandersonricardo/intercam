@@ -45,7 +45,7 @@ export const createCall = async (params: CreateCallParams) => {
 
   const relativePath = `public/images/${call.id}.jpg`;
   const fixedPath = path.join(__dirname, '..', relativePath);
-  fs.writeFile(fixedPath, params.imageBase64, "base64", (err) => { console.log(err); });
+  fs.writeFileSync(fixedPath, params.imageBase64, "base64");
 
   const top = params.location[0];
   const left = params.location[3];
@@ -196,7 +196,7 @@ export const updateCall = async (params: UpdateCallParams) => {
     const newRelativePath = `public/people/${personId}.jpg`;
     const newPath = path.join(__dirname, '..', newRelativePath);
     const oldPath = path.join(__dirname, '..', params.person.image);
-    fs.copyFile(oldPath, newPath, (err) => { console.log(err); });
+    fs.copyFileSync(oldPath, newPath);
 
     body.image = newRelativePath;
   }
