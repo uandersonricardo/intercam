@@ -27,7 +27,7 @@ def create_call(result):
     confidence = float(re.sub(r'[^0-9\.]', '', result[3])) if result[3] != '-' else None
     user = environ.get('USER_ID')
 
-    conn = client.HTTPConnection(environ.get('API_HOST'), int(environ.get('API_PORT')), timeout=10)
+    conn = client.HTTPSConnection(environ.get('API_HOST'), int(environ.get('API_PORT')), timeout=10)
     headers = { 'Content-type': 'application/json' }
 
     data = {
@@ -47,13 +47,15 @@ def create_call(result):
         response_json = json.loads(response.read().decode())
         print(response_json)
         current_call = response_json['id']
+    else:
+        print(response.read().decode())
 
 def fetch_call():
     global current_call
 
     while True:
         if current_call != None:
-            conn = client.HTTPConnection(environ.get('API_HOST'), int(environ.get('API_PORT')), timeout=10)
+            conn = client.HTTPSConnection(environ.get('API_HOST'), int(environ.get('API_PORT')), timeout=10)
             headers = { 'Content-type': 'application/json' }
 
             conn.request('GET', '/calls/' + current_call, headers=headers)
