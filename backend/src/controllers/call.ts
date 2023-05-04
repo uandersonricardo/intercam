@@ -67,7 +67,7 @@ export const createCall = async (params: CreateCallParams) => {
     }
   });
 
-  if (!person?.defaultAnswer) {
+  if (!person || person.defaultAnswer === null) {
     const subscriptions = await db.subscription.findMany({
       where: {
         userId: params.userId
@@ -84,7 +84,7 @@ export const createCall = async (params: CreateCallParams) => {
       }, JSON.stringify({
         title: "Nova chamada",
         body: `${person?.name || "Alguém"} está na porta!`,
-        icon: "https://raw.githubusercontent.com/uandersonricardo/intercam/flask-server/frontend/public/pwa-512x512.png",
+        icon: "https://raw.githubusercontent.com/uandersonricardo/intercam/main/frontend/public/pwa-512x512.png",
         data: {
           id: call.id
         }
@@ -184,13 +184,16 @@ export const updateCall = async (params: UpdateCallParams) => {
     }
   });
 
-  const body = {
+  const body: Record<string, any> = {
     answer: params.answer,
     image: null
   };
 
   if (params.person && !params.person.id) {
-    body.image = params.person.image;
+    const newPath = `public/people/${personId}.jpg`;
+    fs.copyFile(params.person.image, newPath, (err) => { console.log(err); });
+
+    body.image = newPath;
   }
 
   await fog.post("/answer", body).catch((err) => { console.log(err); });
