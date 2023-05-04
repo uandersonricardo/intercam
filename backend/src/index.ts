@@ -1,6 +1,7 @@
 import "express-async-errors";
 
 import express, { Request, Response, json, urlencoded, NextFunction } from "express";
+import path from "path";
 import cors from "cors";
 import morgan from "morgan";
 import callRouter from "./routes/call";
@@ -22,7 +23,7 @@ app.use("/users", userRouter);
 app.use("/people", personRouter);
 app.use("/stats", statsRouter);
 app.use("/subscriptions", subscriptionRouter);
-app.use("/public", express.static("public"));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({ message: "Path not found" });
